@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from datetime import datetime
-import requests 
-import json  
+import requests
+import json
 
 root = tk.Tk()
 root.title("API System My Robot")
@@ -38,35 +38,55 @@ api_link = "http://127.0.0.1:5000/move"
 
 
 def WriteUL(msg):
+    """
+    Append a timestamped message to the user log.
+
+    Arguments:
+        msg (str):
+            The message to insert into command log of the software.
+    """
     ts = datetime.now().strftime("%H:%M:%S")
     UL.insert(tk.END, f"[{ts}] {msg}\n")
     UL.see(tk.END)
 
 
 def handle_get_request(direction):
-    """Simulates sending a GET request and logs the response."""
+    """
+    Send a GET request to the API and log the response.
+
+    Arguments:
+        direction (str):
+            The direction to send to the robot.
+    """
     try:
-       
         response = requests.get(f"{api_link}?direction={direction}")
-        response.raise_for_status()  
+        response.raise_for_status()
         log_message = f"GET request sent for '{direction}'. Status: {response.status_code}. Response: {response.text}"
     except requests.exceptions.RequestException as e:
         log_message = f"GET request failed for '{direction}': {e}"
 
     WriteUL(log_message)
 
+
 def handle_post_request(direction):
-    """Simulates sending a POST request with a JSON body and logs the response."""
+    """
+    Send a POST request with JSON data to the API and log the response.
+
+    Arguments:
+        direction (str):
+            The direction to send to the robot.
+    """
     try:
         data = {"command": "move_robot", "direction": direction}
         headers = {'Content-Type': 'application/json'}
         response = requests.post(api_link, data=json.dumps(data), headers=headers)
-        response.raise_for_status()  
+        response.raise_for_status()
         log_message = f"POST request sent for '{direction}'. Status: {response.status_code}. Response: {response.text}"
     except requests.exceptions.RequestException as e:
         log_message = f"POST request failed for '{direction}': {e}"
 
     WriteUL(log_message)
+
 
 UpButton = tk.Button(ControlFrame, text="↑", width=5, height=2, command=lambda: handle_post_request("Up"))
 LeftButton = tk.Button(ControlFrame, text="←", width=5, height=2, command=lambda: handle_post_request("Left"))
@@ -83,4 +103,3 @@ DownButton.grid(row=2, column=1, padx=5, pady=5)
 StopButton.grid(row=3, column=1, padx=5, pady=5)
 
 root.mainloop()
-
