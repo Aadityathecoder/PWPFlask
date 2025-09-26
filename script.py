@@ -47,6 +47,6 @@ def handle_move():
 
 
 if __name__ == '__main__':
-    # The server will run on http://127.0.0.1:5000
+    # i believe http://127.0.0.1:5000 is the link on which it will run
     print("Starting Flask Mock API Server on http://127.0.0.1:5000/...")
     app.run(debug=True)
